@@ -1,0 +1,572 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.wrap{padding:16px 0;max-width:700px}
+.nav{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:20px}
+.nav-btn{padding:6px 14px;border-radius:20px;border:1.5px solid var(--color-border-secondary);background:transparent;color:var(--color-text-secondary);font-size:13px;cursor:pointer;transition:all .15s}
+.nav-btn.active{background:var(--color-background-secondary);color:var(--color-text-primary);border-color:var(--color-border-primary);font-weight:500}
+.section{display:none}.section.active{display:block}
+.topic-card{border:1px solid var(--color-border-tertiary);border-radius:12px;margin-bottom:12px;overflow:hidden}
+.topic-header{padding:14px 16px;cursor:pointer;display:flex;align-items:center;justify-content:space-between;background:var(--color-background-secondary)}
+.topic-header:hover{background:var(--color-background-tertiary)}
+.topic-title{font-size:15px;font-weight:500;color:var(--color-text-primary)}
+.topic-tag{font-size:11px;padding:2px 8px;border-radius:10px;font-weight:500}
+.tag-core{background:#E6F1FB;color:#0C447C}
+.tag-key{background:#EAF3DE;color:#27500A}
+.tag-app{background:#FAEEDA;color:#633806}
+.chevron{font-size:12px;color:var(--color-text-tertiary);transition:transform .2s}
+.topic-body{display:none;padding:16px;border-top:1px solid var(--color-border-tertiary)}
+.topic-body.open{display:block}
+.chevron.open{transform:rotate(90deg)}
+.sub{margin-bottom:14px}
+.sub-title{font-size:13px;font-weight:500;color:var(--color-text-primary);margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.sub-dot{width:6px;height:6px;border-radius:50%;background:var(--color-text-tertiary);flex-shrink:0}
+.sub-body{font-size:13px;color:var(--color-text-secondary);line-height:1.6}
+pre{background:var(--color-background-tertiary);border-radius:8px;padding:12px;font-size:12px;font-family:var(--font-mono);color:var(--color-text-primary);overflow-x:auto;margin:8px 0;line-height:1.5}
+.use-box{background:var(--color-background-secondary);border-left:3px solid #1D9E75;border-radius:0 8px 8px 0;padding:8px 12px;margin-top:8px;font-size:12px;color:var(--color-text-secondary)}
+.use-box strong{color:#085041;font-weight:500}
+.section-intro{font-size:13px;color:var(--color-text-secondary);margin-bottom:16px;line-height:1.6;padding:12px 14px;background:var(--color-background-secondary);border-radius:10px}
+</style>
+<div class="wrap">
+<div class="nav">
+  <button class="nav-btn active" onclick="show('c1')">Course 1: Linear Algebra</button>
+  <button class="nav-btn" onclick="show('c2')">Course 2: Calculus</button>
+  <button class="nav-btn" onclick="show('c3')">Course 3: Probability & Stats</button>
+</div>
+
+<div id="c1" class="section active">
+<div class="section-intro">Linear Algebra is the language of data in ML. Every dataset, image, or model is stored as vectors and matrices. This course teaches you to understand and manipulate them.</div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">1. Vectors</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is a vector?</div>
+  <div class="sub-body">A vector is a list of numbers. In ML, it represents one data point — one person, one image, one word.<pre>v = [2, 3]      # 2D vector — point in 2D space
+v = [1, 0, 5]   # 3D vector — point in 3D space
+np.array([2, 3])  # shape: (2,) — 1D, flat</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Vector operations</div>
+  <div class="sub-body">Addition, scaling, and dot product are the three core operations.
+<pre>a = np.array([1, 2])
+b = np.array([3, 4])
+
+a + b        # → [4, 6]   add element by element
+2 * a        # → [2, 4]   scale every element
+np.dot(a,b)  # → 11  (1×3 + 2×4) — dot product</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Dot product</div>
+  <div class="sub-body">Multiply matching elements, then add. Result is a single number. Measures how similar two vectors are.
+<pre># dot product by hand
+a = [1, 2, 3]
+b = [4, 5, 6]
+# (1×4) + (2×5) + (3×6) = 4+10+18 = 32</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Vector norm (length)</div>
+  <div class="sub-body">The length of a vector. Square root of sum of squares.
+<pre>v = [3, 4]
+np.linalg.norm(v)  # → 5.0  (√(9+16))</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> representing data points, word embeddings, measuring similarity between items (cosine similarity)</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">2. Matrices</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is a matrix?</div>
+  <div class="sub-body">A 2D array of numbers. Rows and columns. Shape = (rows, cols). Think of it as a table of data.
+<pre>A = np.array([[1, 2, 3],
+              [4, 5, 6]])
+A.shape  # → (2, 3) — 2 rows, 3 columns
+# Rule: shape = (rows, columns) — "RC Cola"</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Matrix operations</div>
+  <div class="sub-body">
+<pre>A + B        # element-wise addition (same shape)
+A * 2        # multiply every element by 2
+A @ B        # matrix multiplication ← most important!
+A.T          # transpose — flip rows and columns</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Matrix multiplication</div>
+  <div class="sub-body">Row of A × column of B → each element of result.
+<pre>A = [[2, 3],   B = [1,    A@B:
+     [2, 1]]        0]    row0: 2×1+3×0=2
+                          row1: 2×1+1×0=2
+                          result: [2, 2]</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Special matrices</div>
+  <div class="sub-body">
+<pre>np.eye(3)       # identity matrix — I (like number 1 for matrices)
+np.zeros((3,3)) # all zeros
+np.ones((2,3))  # all ones</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> storing entire datasets (m examples × n features), representing neural network weights, transformations</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">3. Systems of Linear Equations</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-key">Key</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is it?</div>
+  <div class="sub-body">Multiple equations, multiple unknowns. Pack them into a matrix and solve together.
+<pre># 2 equations, 2 unknowns: x and y
+# -x + 3y = 7
+#  3x + 2y = 1
+A = np.array([[-1, 3],
+              [ 3, 2]])
+b = np.array([7, 1])</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Augmented matrix</div>
+  <div class="sub-body">Glue A and b together into one matrix to work with:
+<pre>A_sys = np.hstack((A, b.reshape(2,1)))
+# → [[-1  3  7]
+#    [ 3  2  1]]</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Gaussian elimination</div>
+  <div class="sub-body">Use row operations to create staircase (zeros below diagonal). Then read answers bottom to top.
+<pre># 3 tools:
+SwapRows(A, i, j)       # swap two rows
+MultiplyRow(A, i, k)    # multiply row by scalar
+AddRows(A, i, j, k)     # k×row_i + row_j → row_j
+
+# Goal: get this staircase shape
+# [■  ■  ■ | ■]
+# [0  ■  ■ | ■]
+# [0  0  ■ | ■]  ← read x3 directly!</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Number of solutions</div>
+  <div class="sub-body">
+<pre># det ≠ 0  → exactly 1 solution  ✅
+# det = 0, inconsistent → 0 solutions ❌
+# det = 0, consistent   → ∞ solutions ♾️
+np.linalg.det(A)  # check determinant</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> solving regression problems, finding optimal parameters</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">4. Determinant, Rank & Singularity</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-key">Key</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Determinant</div>
+  <div class="sub-body">A single number that tells if a matrix has a unique solution.
+<pre>A = np.array([[2, 3],
+              [1, 4]])
+# by hand: (2×4) - (3×1) = 8-3 = 5
+np.linalg.det(A)  # → 5.0
+# det ≠ 0 → invertible → 1 solution ✅
+# det = 0 → singular  → no/∞ solutions ❌</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Rank</div>
+  <div class="sub-body">Number of rows that carry unique (independent) information. Found by row reduction — count non-zero rows.
+<pre>A = np.array([[1, 2],
+              [2, 4]])  # row2 = 2×row1 — no new info!
+np.linalg.matrix_rank(A)  # → 1
+
+B = np.array([[1, 2],
+              [3, 4]])  # rows independent
+np.linalg.matrix_rank(B)  # → 2 (full rank)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Singularity</div>
+  <div class="sub-body">
+<pre># Singular matrix:     det = 0, rank < n, NOT invertible
+# Non-singular matrix: det ≠ 0, rank = n, IS invertible
+# rank = n (full rank) → same as det ≠ 0 → 1 unique solution</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> checking if a model can find a unique solution, detecting redundant features in data</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">5. Matrix Inverse & Linear Transformations</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-key">Key</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Matrix inverse</div>
+  <div class="sub-body">Like dividing by a matrix. A⁻¹ × A = I (identity). Only exists when det ≠ 0.
+<pre>A = np.array([[2, 3],
+              [1, 4]])
+A_inv = np.linalg.inv(A)
+A_inv @ A  # → [[1,0],[0,1]] = identity ✅
+
+# Solve Ax = b using inverse:
+x = np.linalg.inv(A) @ b</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Linear transformations</div>
+  <div class="sub-body">Matrix multiplication is a transformation — it rotates, scales, shears vectors.
+<pre>A = np.array([[2, 0],
+              [0, 3]])
+v = np.array([1, 1])
+A @ v  # → [2, 3] — stretched x by 2, y by 3
+
+# common transforms:
+# scaling, rotation, reflection, shear</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> solving Ax=b directly, understanding how neural networks transform data through layers</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">6. Eigenvalues & Eigenvectors</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-app">Applied</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What are they?</div>
+  <div class="sub-body">Special vector v and number λ where A×v = λ×v. The matrix only stretches v — never rotates it.
+<pre>A = [[2, 3],
+     [2, 1]]
+# A × v = λ × v
+# eigenvector v just gets scaled by λ, no direction change</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Finding eigenvalues (math)</div>
+  <div class="sub-body">
+<pre># Step 1: det(A - λI) = 0
+# Step 2: expand → get quadratic in λ
+# Step 3: solve quadratic → get λ₁, λ₂
+
+A - λI = [[2-λ,  3],
+          [ 2,  1-λ]]
+det = (2-λ)(1-λ) - 6 = λ²-3λ-4 = 0
+→ λ₁=4, λ₂=-1</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Finding eigenvectors (math)</div>
+  <div class="sub-body">
+<pre># For each λ, solve (A-λI)v = 0
+# λ=4: [[-2,3],[2,-3]] × v = 0
+#       -2x+3y=0 → x=3,y=2 → v₁=[3,2]
+# λ=-1: [[3,3],[2,2]] × v = 0
+#        x+y=0 → x=-1,y=1 → v₂=[-1,1]
+
+vals, vecs = np.linalg.eig(A)  # numpy way</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> PCA (dimensionality reduction), understanding how data spreads, compressing data while keeping important patterns</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">7. NumPy Essentials</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-app">Applied</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Array creation & shapes</div>
+  <div class="sub-body">
+<pre>np.array([1,2,3])        # 1D: shape (3,)
+np.array([[1,2],[3,4]])  # 2D: shape (2,2)
+np.zeros((3,3))          # all zeros (initialized)
+np.empty((3,3))          # uninitialized (faster, unsafe to read)
+np.arange(0,1,0.25)      # [0, 0.25, 0.5, 0.75] — you set step
+np.linspace(0,1,5)       # [0, 0.25, 0.5, 0.75, 1] — you set count</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Indexing & slicing</div>
+  <div class="sub-body">
+<pre>a[0]       # first row → 1D (dimension drops!)
+a[0:1]     # first row → 2D (dimension kept!)
+a[:, 1]    # column 1 → 1D
+a[:, 1:2]  # column 1 → 2D (use this for ML!)
+a[0, 1]    # single element → scalar</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Stacking & splitting</div>
+  <div class="sub-body">
+<pre>np.vstack((a, b))    # stack rows (↓) — same cols needed
+np.hstack((a, b))    # stack columns (→) — same rows needed
+np.hsplit(a, 3)      # split into 3 equal column chunks
+np.hsplit(a, [2,4])  # split before col 2 and col 4</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Broadcasting</div>
+  <div class="sub-body">NumPy auto-expands smaller arrays to match larger ones. Shapes compatible if equal or one is 1.
+<pre>a = np.array([[1,2,3],[4,5,6]])  # (2,3)
+b = np.array([10,20,30])         # (3,) → acts like (1,3)
+a + b  # → [[11,22,33],[14,25,36]] — b broadcast across rows</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> all data manipulation, feeding data into models, reshaping between operations</div>
+</div></div>
+</div>
+
+<div id="c2" class="section">
+<div class="section-intro">Calculus teaches how to optimize — find the minimum of a cost function. This is the mathematical engine behind training all neural networks.</div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">1. Derivatives</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is a derivative?</div>
+  <div class="sub-body">The slope of a function at any point. How fast is output changing when input changes a tiny bit?
+<pre># f(x) = x²
+# f'(x) = 2x  ← derivative
+
+# at x=3: slope = 2×3 = 6  (going up steeply)
+# at x=0: slope = 0         (at the bottom — minimum!)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Basic rules</div>
+  <div class="sub-body">
+<pre># Power rule:   d/dx[xⁿ] = n×xⁿ⁻¹
+# x³ → 3x²,   x² → 2x,   x → 1
+
+# Constant:    d/dx[c] = 0
+# Sum:         d/dx[f+g] = f' + g'
+# Chain rule:  d/dx[f(g(x))] = f'(g(x)) × g'(x)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Finding minimum</div>
+  <div class="sub-body">At minimum, slope = 0. Set derivative = 0 and solve.
+<pre># f(x) = x² - 4x + 3
+# f'(x) = 2x - 4 = 0
+# x = 2  ← minimum is at x=2</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> finding where the cost function is minimum — that's where the best W and b are!</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">2. Gradient Descent</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is it?</div>
+  <div class="sub-body">An algorithm that finds the minimum of a function by taking small steps in the downhill direction. This is HOW neural networks learn.
+<pre># Imagine a valley ⛰️:
+# Current position = current W and b
+# Goal = roll down to lowest point (min cost)
+# Gradient = direction of steepest uphill
+# Step = move in OPPOSITE direction (downhill)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Update rule</div>
+  <div class="sub-body">
+<pre>W = W - learning_rate × dL/dW
+b = b - learning_rate × dL/db
+
+# learning_rate: how big each step is
+# dL/dW: gradient — which direction is uphill?
+# minus sign: we go DOWNHILL (opposite of gradient)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Learning rate</div>
+  <div class="sub-body">
+<pre># too large → overshoots minimum, bounces around ❌
+#  0.1  →  [big jumps, unstable]
+# too small → takes forever to converge ❌
+#  0.0001 → [tiny steps, too slow]
+# just right → smooth convergence ✅
+#  0.01  →  [typical starting value]</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> training every neural network — adjusting W and b in the right direction every iteration</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">3. Cost Functions</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is a cost function?</div>
+  <div class="sub-body">A number that measures how wrong your model's predictions are. Training = minimizing this number.
+<pre># Mean Squared Error (for regression):
+# L = (1/2m) × Σ(ŷ - y)²
+#
+def compute_cost(Y_hat, Y):
+    m = Y.shape[1]
+    cost = np.sum((Y_hat - Y)**2) / (2*m)
+    return cost
+# Perfect predictions → cost = 0 ✅
+# Terrible predictions → cost = huge ❌</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Why squared error?</div>
+  <div class="sub-body">
+<pre># Without squaring: +2 and -2 errors cancel out → misleading!
+# With squaring:    4 and 4 → always positive → honest total error
+# ÷2m → average (not total), makes derivative cleaner</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> measuring model quality, guiding gradient descent toward better parameters</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">4. Partial Derivatives & Gradients</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-key">Key</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Partial derivatives</div>
+  <div class="sub-body">When a function has multiple inputs (like W and b), you take the derivative with respect to ONE at a time.
+<pre># L(W, b) = cost function with 2 parameters
+# ∂L/∂W = how much does cost change if W changes slightly?
+#          (treat b as constant)
+# ∂L/∂b = how much does cost change if b changes slightly?
+#          (treat W as constant)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Gradient vector</div>
+  <div class="sub-body">Pack all partial derivatives into one vector. Points in direction of steepest increase.
+<pre># ∇L = [∂L/∂W,  ∂L/∂b]
+#        ↑         ↑
+#     gradient  gradient
+#     w.r.t W   w.r.t b
+# gradient descent: move OPPOSITE to ∇L</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> backward propagation — computing how much each weight contributed to the error</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">5. Forward & Backward Propagation</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-app">Applied</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Forward propagation</div>
+  <div class="sub-body">Feed input forward through the network to get a prediction.
+<pre>def forward_propagation(X, parameters):
+    W = parameters["W"]
+    b = parameters["b"]
+    Z = np.matmul(W, X) + b  # Z = WX + b
+    Y_hat = Z                 # prediction
+    return Y_hat
+# Shape: W(1,1) × X(1,30) + b(1,1) = Y_hat(1,30)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Backward propagation</div>
+  <div class="sub-body">Compute gradients and update W and b. Uses chain rule from calculus.
+<pre># dL/dW = (1/m) × (Y_hat - Y) × X.T
+# dL/db = (1/m) × sum(Y_hat - Y)
+# Then update:
+W = W - lr × dL/dW
+b = b - lr × dL/db</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Full training loop</div>
+  <div class="sub-body">
+<pre>def nn_model(X, Y, num_iterations=1000):
+    parameters = initialize_parameters(n_x, n_y)
+    for i in range(num_iterations):
+        Y_hat = forward_propagation(X, parameters)  # predict
+        cost  = compute_cost(Y_hat, Y)              # measure error
+        parameters = update_params(parameters, ...)  # adjust W,b
+    return parameters  # best W and b found!</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> this IS how neural networks learn — the entire training process</div>
+</div></div>
+</div>
+
+<div id="c3" class="section">
+<div class="section-intro">Probability and Statistics let you understand uncertainty in data and make confident predictions. Essential for understanding model outputs, distributions, and evaluation.</div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">1. Probability Basics</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>What is probability?</div>
+  <div class="sub-body">A number between 0 and 1 measuring how likely an event is. 0 = impossible, 1 = certain.
+<pre># P(heads) = 0.5
+# P(rain) = 0.3  (30% chance)
+# P(A and B) = P(A) × P(B)  if independent
+# P(A or B)  = P(A) + P(B) - P(A and B)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Conditional probability</div>
+  <div class="sub-body">Probability of A given B already happened.
+<pre># P(A|B) = P(A and B) / P(B)
+# "Given it's cloudy, what's P(rain)?"
+# P(rain|cloudy) = P(rain and cloudy) / P(cloudy)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Bayes' theorem</div>
+  <div class="sub-body">Update your belief when you get new evidence.
+<pre># P(A|B) = P(B|A) × P(A) / P(B)
+# Example: spam filter
+# P(spam|"free money") = P("free money"|spam) × P(spam)
+#                        ──────────────────────────────
+#                              P("free money")</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> Naive Bayes classifiers, spam detection, understanding model confidence</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">2. Probability Distributions</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Normal (Gaussian) distribution</div>
+  <div class="sub-body">The famous bell curve. Most data clusters around the mean. Described by μ (mean) and σ (std dev).
+<pre>import numpy as np
+data = np.random.normal(mean=0, std=1, size=1000)
+# 68% of data within 1σ of mean
+# 95% of data within 2σ of mean
+# 99.7% within 3σ — the "68-95-99.7 rule"</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Binomial distribution</div>
+  <div class="sub-body">Count of successes in n trials, each with probability p.
+<pre># Flip coin 10 times. Count heads.
+# n=10 trials, p=0.5 probability
+# P(exactly k heads) = binomial formula
+import scipy.stats as stats
+stats.binom.pmf(k=6, n=10, p=0.5)  # P(6 heads)</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> weight initialization (normal dist), classification outputs, modeling real-world data</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">3. Descriptive Statistics</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-core">Core</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Central tendency</div>
+  <div class="sub-body">
+<pre>data = [2, 4, 4, 6, 8]
+np.mean(data)    # → 4.8   (average)
+np.median(data)  # → 4.0   (middle value)
+# mode = most frequent value</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Spread / variability</div>
+  <div class="sub-body">
+<pre>np.std(data)     # → std deviation (avg distance from mean)
+np.var(data)     # → variance = std²
+np.min(data)     # → 2
+np.max(data)     # → 8
+np.percentile(data, 25)  # → Q1 (25th percentile)</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Normalization</div>
+  <div class="sub-body">Scale data to the same range so features don't dominate each other.
+<pre># Z-score normalization (mean=0, std=1):
+X_norm = (X - np.mean(X)) / np.std(X)
+# Why? House size (1000s) vs quality (1-10)
+# Without normalization: size dominates learning!
+# After normalization: both treated equally ✅</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> preprocessing data before training, understanding feature distributions</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">4. Statistical Inference</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-key">Key</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Population vs sample</div>
+  <div class="sub-body">
+<pre># Population: ALL possible data points (often impossible to get)
+# Sample: subset of population you actually have
+# Goal: use sample statistics to estimate population parameters
+
+# Sample mean  → estimates → population mean
+# Sample std   → estimates → population std</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Confidence intervals</div>
+  <div class="sub-body">A range that likely contains the true population value.
+<pre># 95% confidence interval:
+# mean ± 1.96 × (std / √n)
+# "We're 95% confident the true mean is in this range"
+# n = sample size — larger n → narrower interval ✅</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Hypothesis testing</div>
+  <div class="sub-body">Is an observed effect real or just random chance?
+<pre># H₀ (null hypothesis): "no effect" — default assumption
+# H₁ (alt hypothesis):  "there IS an effect"
+# p-value < 0.05 → reject H₀ → effect is real ✅
+# p-value > 0.05 → fail to reject H₀ → could be chance</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> A/B testing model variants, validating that model improvements are statistically significant</div>
+</div></div>
+
+<div class="topic-card">
+<div class="topic-header" onclick="tog(this)">
+  <span class="topic-title">5. Regression & Model Evaluation</span>
+  <div style="display:flex;align-items:center;gap:8px"><span class="topic-tag tag-app">Applied</span><span class="chevron">▶</span></div>
+</div>
+<div class="topic-body">
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Linear regression</div>
+  <div class="sub-body">Fit a line ŷ = Wx + b to data. Find W and b that minimize error.
+<pre># Simple:   ŷ = wx + b       (1 input)
+# Multiple: ŷ = w₁x₁+w₂x₂+b (2+ inputs)
+# In matrix form: Ŷ = WX + b
+# W shape: (n_y, n_x), X shape: (n_x, m)
+# Result Ŷ shape: (n_y, m) — one prediction per example</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Evaluation metrics</div>
+  <div class="sub-body">
+<pre># MSE = mean((ŷ - y)²)        → lower is better
+# RMSE = √MSE                 → same units as y
+# R² = 1 - SS_res/SS_tot      → 1.0 = perfect fit
+#                                0.0 = as bad as just using mean</pre></div></div>
+  <div class="sub"><div class="sub-title"><span class="sub-dot"></span>Overfitting vs underfitting</div>
+  <div class="sub-body">
+<pre># Underfitting: model too simple — high error on training data
+# Overfitting:  model memorizes training — fails on new data
+# Goal: generalize — perform well on UNSEEN data
+# Solution: train/test split, regularization, cross-validation</pre></div></div>
+  <div class="use-box"><strong>Used in ML for:</strong> this IS machine learning — training, evaluating, and deploying predictive models</div>
+</div></div>
+</div>
+</div>
+
+<script>
+function show(id){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  event.target.classList.add('active');
+}
+function tog(header){
+  const body=header.nextElementSibling;
+  const chev=header.querySelector('.chevron');
+  body.classList.toggle('open');
+  chev.classList.toggle('open');
+}
+</script>
